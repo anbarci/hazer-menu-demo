@@ -121,14 +121,15 @@
     if (izinKutu && 'serviceWorker' in navigator && 'PushManager' in window && window.Notification && Notification.permission !== 'denied')
       fetch('/api/bildirim/anahtar').then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { if (j && j.anahtar) { vapid = j.anahtar; izinKutu.hidden = false; } }).catch(function () { });
     var b64 = function (s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); s += '='.repeat((4 - s.length % 4) % 4); return Uint8Array.from(atob(s), function (c) { return c.charCodeAt(0); }); };
+    // abonelik kaydedilirse true döner
     function aboneOl(no) {
       var izin = Notification.requestPermission();
-      Promise.all([izin, navigator.serviceWorker.register('/sw.js').then(function () { return navigator.serviceWorker.ready; })]).then(function (x) {
-        if (x[0] !== 'granted') return;
+      return Promise.all([izin, navigator.serviceWorker.register('/sw.js').then(function () { return navigator.serviceWorker.ready; })]).then(function (x) {
+        if (x[0] !== 'granted') return false;
         return x[1].pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(vapid) }).then(function (a) {
-          return fetch('/api/bildirim/abone', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ numara: no, abonelik: a.toJSON() }) });
+          return fetch('/api/bildirim/abone', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ numara: no, abonelik: a.toJSON() }) }).then(function (r) { return r.ok; });
         });
-      }).catch(function () { });
+      }).catch(function () { return false; });
     }
     function yaz(sinif, metin) { $(sinif, adim.sonuc).textContent = metin || ''; }
     function canliSaat(acik) {
@@ -163,15 +164,22 @@
       e.preventDefault();
       var d = girdi.value.replace(/\D/g, '').replace(/^90(?=5\d{9}$)/, '').replace(/^0(?=5\d{9}$)/, '');
       if (!/^5\d{9}$/.test(d)) return uyar('Numara 05 ile başlayan 11 haneli olmalı, ör. 0532 123 45 67.');
-      if (vapid && izinG.checked) aboneOl(d);
+      // işletme bildirim onayını zorunlu yaptıysa onaysız çevrilmez
+      var zorunlu = izinKutu && izinKutu.dataset.zorunlu === '1';
+      if (zorunlu && !izinG.checked) return uyar('Çarkı çevirmek için bildirim kutusunu işaretle.');
+      if (zorunlu && !vapid) return uyar(window.Notification && Notification.permission === 'denied' ? 'Bu sitenin bildirimleri tarayıcında kapalı. Tarayıcı ayarlarından izin verip yeniden dene.' : 'Bu tarayıcı bildirim desteklemiyor. iPhone’da menüyü Paylaş › Ana Ekrana Ekle ile ekleyip oradan aç.');
+      var abone = vapid && izinG.checked ? aboneOl(d) : null;
       hataP.hidden = true; girdi.removeAttribute('aria-invalid');
       var dugme = $('.c-dugme', adim.numara); dugme.disabled = true;
-      istek('durum', { numara: d }).then(function (r) {
-        dugme.disabled = false;
-        if (r.hata) return uyar(r.hata);
-        numara = d; sakla(A, d);
-        if (!r.izin) return sonuc(Object.assign({ kalan: r.kalan, baskaNumara: r.baskaNumara }, r.son), false);
-        goster('cark'); cevir.disabled = false; cevir.focus();
+      (zorunlu ? abone : Promise.resolve(true)).then(function (ok) {
+        if (!ok) { dugme.disabled = false; return uyar('Bildirim izni verilmedi. Çarkı çevirmek için izin gerekiyor.'); }
+        return istek('durum', { numara: d }).then(function (r) {
+          dugme.disabled = false;
+          if (r.hata) return uyar(r.hata);
+          numara = d; sakla(A, d);
+          if (!r.izin) return sonuc(Object.assign({ kalan: r.kalan, baskaNumara: r.baskaNumara }, r.son), false);
+          goster('cark'); cevir.disabled = false; cevir.focus();
+        });
       }).catch(function () { dugme.disabled = false; uyar('Bağlantı kurulamadı. İnternetini kontrol edip yeniden dene.'); });
     });
     function tik() { if (!ses) return; var o = ses.createOscillator(), g = ses.createGain(), t = ses.currentTime; o.type = 'square'; o.frequency.value = 1400; g.gain.setValueAtTime(0.05, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.03); o.connect(g); g.connect(ses.destination); o.start(t); o.stop(t + 0.035); titre(6); }
