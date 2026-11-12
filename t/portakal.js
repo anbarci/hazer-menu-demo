@@ -116,6 +116,20 @@
         .then(function (r) { return r.json().then(function (j) { j._durum = r.status; return j; }); });
     }
     function uyar(m) { hataP.textContent = m; hataP.hidden = false; girdi.setAttribute('aria-invalid', 'true'); girdi.focus(); }
+    // bildirim izni çarkta numarayla birlikte istenir; tarayıcı desteklemiyorsa (iPhone'da ana ekrana eklenmemişse) kutu gizli kalır
+    var izinKutu = $('.c-bildirim-izin', dlg), izinG = $('#c-bildirim', dlg), vapid = null;
+    if (izinKutu && 'serviceWorker' in navigator && 'PushManager' in window && window.Notification && Notification.permission !== 'denied')
+      fetch('/api/bildirim/anahtar').then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { if (j && j.anahtar) { vapid = j.anahtar; izinKutu.hidden = false; } }).catch(function () { });
+    var b64 = function (s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); s += '='.repeat((4 - s.length % 4) % 4); return Uint8Array.from(atob(s), function (c) { return c.charCodeAt(0); }); };
+    function aboneOl(no) {
+      var izin = Notification.requestPermission();
+      Promise.all([izin, navigator.serviceWorker.register('/sw.js').then(function () { return navigator.serviceWorker.ready; })]).then(function (x) {
+        if (x[0] !== 'granted') return;
+        return x[1].pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(vapid) }).then(function (a) {
+          return fetch('/api/bildirim/abone', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ numara: no, abonelik: a.toJSON() }) });
+        });
+      }).catch(function () { });
+    }
     function yaz(sinif, metin) { $(sinif, adim.sonuc).textContent = metin || ''; }
     function canliSaat(acik) {
       clearInterval(saat); yaz('.c-sonuc-saat', '');
@@ -143,11 +157,13 @@
       goster('numara'); toastGizle(); dlg.showModal(); girdi.focus();
     }
     document.addEventListener('click', function (e) { if (e.target.closest('[data-cark-ac]')) ac(e); });
+    if (location.hash === '#cark') ac();
     dlg.addEventListener('close', function () { canliSaat(false); });
     $('.c-numara', dlg).addEventListener('submit', function (e) {
       e.preventDefault();
       var d = girdi.value.replace(/\D/g, '').replace(/^90(?=5\d{9}$)/, '').replace(/^0(?=5\d{9}$)/, '');
       if (!/^5\d{9}$/.test(d)) return uyar('Numara 05 ile başlayan 11 haneli olmalı, ör. 0532 123 45 67.');
+      if (vapid && izinG.checked) aboneOl(d);
       hataP.hidden = true; girdi.removeAttribute('aria-invalid');
       var dugme = $('.c-dugme', adim.numara); dugme.disabled = true;
       istek('durum', { numara: d }).then(function (r) {

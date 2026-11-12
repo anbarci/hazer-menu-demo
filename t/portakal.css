@@ -150,4 +150,7 @@ button:not(:disabled):active, .c-sekme a:active, .c-ayak a:active { filter: brig
 .c-sonuc-saat:empty, .c-sonuc-kod:empty, .c-sonuc-odul:empty { display: none; }
 .c-guncel { font-size: 0.8125rem; opacity: 0.85; }
 .c-bolum h2, .c-happy h2, .c-cark .c-cark-b, .c-sonuc-odul { text-wrap: balance; }
+.c-bildirim-izin { display: flex; gap: 0.6rem; align-items: flex-start; margin-top: 0.7rem; font-size: 0.9375rem; line-height: 1.4; cursor: pointer; }
+.c-bildirim-izin[hidden] { display: none; }
+.c-bildirim-izin input { width: 22px; height: 22px; margin: 0; flex-shrink: 0; accent-color: var(--yaprak); }
 .demo-serit { margin: 0; padding: 0.4rem 1rem; background: var(--murekkep); color: var(--krem); font: 600 0.8125rem/1.4 var(--govde); text-align: center; }
