@@ -62,6 +62,19 @@
     toastGizle(); aDlg.showModal();
   });
 
+  // ürün fotoğrafı: dokununca büyük açılır, fotoğrafa ya da dışına dokununca kapanır
+  var fDlg = $('.c-foto-dlg');
+  if (fDlg && fDlg.showModal) {
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest('.c-foto');
+      if (!b) return;
+      $('img', fDlg).src = $('img', b).src;
+      $('p', fDlg).textContent = $('b', b.parentNode).textContent;
+      toastGizle(); fDlg.showModal();
+    });
+    fDlg.addEventListener('click', function (e) { if (e.target === fDlg || e.target.tagName === 'IMG') fDlg.close(); });
+  }
+
   // duyuru zili
   var zil = $('.c-zil'), panel = $('#c-duyurular'), toast = $('.c-toast');
   if (zil && panel) (function () {
