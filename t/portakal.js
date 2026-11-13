@@ -52,27 +52,32 @@
     araG.addEventListener('keydown', function (e) { if (e.key === 'Escape') araD.click(); });
   }
 
-  // alerjen ayrıntısı
-  var aDlg = $('.c-alj-dlg');
-  document.addEventListener('click', function (e) {
-    var b = e.target.closest('.c-alj');
-    if (!b || !aDlg.showModal) return;
-    $('#c-alj-b', aDlg).textContent = b.dataset.baslik;
-    $('ul', aDlg).replaceChildren.apply($('ul', aDlg), JSON.parse(b.dataset.ayrinti).map(function (m) { var li = document.createElement('li'); li.textContent = m; return li; }));
-    toastGizle(); aDlg.showModal();
-  });
-
-  // ürün fotoğrafı: dokununca büyük açılır, fotoğrafa ya da dışına dokununca kapanır
-  var fDlg = $('.c-foto-dlg');
-  if (fDlg && fDlg.showModal) {
+  // ürün penceresi: ürüne dokununca alttan açılır; fotoğraf, fiyat, açıklama ve alerjen bilgisi; geri tuşu, aşağı kaydırma ya da dışına dokunma kapatır
+  var sheet = $('.c-sheet');
+  if (sheet && sheet.showModal) {
+    var sImg = $('img', sheet), sGovde = $('.c-sheet-govde', sheet);
+    var sheetAc = function (u) {
+      var foto = $('.c-foto img', u), alj = $('.c-alj', u);
+      sImg.hidden = !foto; if (foto) { sImg.src = foto.src; }
+      $('h2', sheet).textContent = $('b', u).textContent;
+      $('.c-sheet-fiyat', sheet).innerHTML = $('.c-etiket', u).innerHTML;
+      var ac = alj ? alj.dataset.aciklama : ''; $('.c-sheet-aciklama', sheet).textContent = ac; $('.c-sheet-aciklama', sheet).hidden = !ac;
+      var ul = $('ul', sheet); ul.replaceChildren.apply(ul, (alj ? JSON.parse(alj.dataset.ayrinti) : [$('.c-danis', u) ? $('.c-danis', u).textContent : '']).filter(Boolean).map(function (m) { var li = document.createElement('li'); li.textContent = m; return li; }));
+      sheet.scrollTop = 0; sheet.style.transform = '';
+      toastGizle(); sheet.showModal(); history.pushState({ sheet: 1 }, '');
+    };
     document.addEventListener('click', function (e) {
-      var b = e.target.closest('.c-foto');
-      if (!b) return;
-      $('img', fDlg).src = $('img', b).src;
-      $('p', fDlg).textContent = $('b', b.parentNode).textContent;
-      toastGizle(); fDlg.showModal();
+      var u = e.target.closest('.c-urun');
+      if (u && !e.target.closest('a')) sheetAc(u);
     });
-    fDlg.addEventListener('click', function (e) { if (e.target === fDlg || e.target.tagName === 'IMG') fDlg.close(); });
+    sheet.addEventListener('click', function (e) { if (e.target === sheet) sheet.close(); });
+    sheet.addEventListener('close', function () { if (history.state && history.state.sheet) history.back(); });
+    addEventListener('popstate', function () { if (sheet.open) sheet.close(); });
+    // tutamaçtan aşağı sürükleyince kapanır
+    var ust = $('.c-sheet-ust', sheet), y0 = null;
+    ust.addEventListener('pointerdown', function (e) { y0 = e.clientY; sheet.style.transition = 'none'; ust.setPointerCapture(e.pointerId); });
+    ust.addEventListener('pointermove', function (e) { if (y0 != null) sheet.style.transform = 'translateY(' + Math.max(0, e.clientY - y0) + 'px)'; });
+    ust.addEventListener('pointerup', function (e) { var d = e.clientY - y0; y0 = null; sheet.style.transition = ''; sheet.style.transform = ''; if (d > 90) sheet.close(); });
   }
 
   // duyuru zili

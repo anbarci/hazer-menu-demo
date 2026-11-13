@@ -129,10 +129,6 @@ button:not(:disabled):active, .c-sekme a:active, .c-ayak a:active { filter: brig
 .c-alj.icerir { color: var(--kiremit); }
 .c-alj.girilmedi { color: var(--soluk); }
 .c-happy .c-alj.icerir { color: var(--murekkep); }
-.c-alj-dlg { width: min(22rem, calc(100% - 1.5rem)); padding: 1rem 1.1rem 1.1rem; border: 2px solid var(--yaprak); border-radius: 8px; background: var(--krem); color: var(--murekkep); }
-.c-alj-dlg::backdrop { background: color-mix(in srgb, var(--yaprak-koyu) 60%, transparent); }
-.c-alj-dlg ul { margin: 0.4rem 0 0; padding-left: 1.1rem; line-height: 1.5; }
-.c-alj-dlg li + li { margin-top: 0.35rem; }
 .c-alj-liste { list-style: none; margin: 0.6rem 0; padding: 0; }
 .c-alj-liste li { display: grid; gap: 0.1rem; padding: 0.6rem 0; border-bottom: 2px solid var(--cizgi); }
 .c-alj-liste span { color: var(--soluk); }
@@ -147,11 +143,6 @@ button:not(:disabled):active, .c-sekme a:active, .c-ayak a:active { filter: brig
 .c-fotolu .c-etiket { grid-column: 3; }
 .c-foto { grid-row: 1 / span 4; width: 72px; height: 72px; padding: 0; border: 0; border-radius: 6px; overflow: hidden; background: var(--cizgi); cursor: zoom-in; }
 .c-foto img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.c-foto-dlg { width: min(32rem, calc(100% - 1.5rem)); max-height: calc(100dvh - 1.5rem); padding: 0; border: 0; border-radius: 8px; background: var(--murekkep); color: var(--krem); overflow: hidden; }
-.c-foto-dlg::backdrop { background: color-mix(in srgb, var(--murekkep) 85%, transparent); }
-.c-foto-dlg img { display: block; width: 100%; max-height: calc(100dvh - 6rem); object-fit: contain; cursor: zoom-out; }
-.c-foto-dlg p { margin: 0; padding: 0.7rem 3.5rem 0.8rem 1rem; font: 800 1.125rem/1.3 "Bricolage Grotesque", var(--govde); }
-.c-foto-kapat { position: absolute; z-index: 1; top: 0.5rem; right: 0.5rem; width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--krem); color: var(--murekkep); display: grid; place-items: center; }
 .c-sonuc-saat { font: 600 0.875rem var(--govde); color: var(--soluk); font-variant-numeric: tabular-nums; }
 .c-sonuc-saat:empty, .c-sonuc-kod:empty, .c-sonuc-odul:empty { display: none; }
 .c-guncel { font-size: 0.8125rem; opacity: 0.85; }
@@ -159,4 +150,26 @@ button:not(:disabled):active, .c-sekme a:active, .c-ayak a:active { filter: brig
 .c-bildirim-izin { display: flex; gap: 0.6rem; align-items: flex-start; margin-top: 0.7rem; font-size: 0.9375rem; line-height: 1.4; cursor: pointer; }
 .c-bildirim-izin[hidden] { display: none; }
 .c-bildirim-izin input { width: 22px; height: 22px; margin: 0; flex-shrink: 0; accent-color: var(--yaprak); }
+.c-urun { cursor: pointer; }
+.c-sheet { position: fixed; inset: auto 0 0 0; width: 100%; max-width: 32rem; max-height: 90dvh; margin: 0 auto; padding: 0 0 calc(env(safe-area-inset-bottom, 0px) + 1.2rem); border: 0; border-radius: 20px 20px 0 0; background: var(--krem); color: var(--murekkep); overflow-y: auto; overscroll-behavior: contain; transform: translateY(0); transition: transform 0.42s cubic-bezier(0.32, 0.72, 0, 1), overlay 0.42s allow-discrete, display 0.42s allow-discrete; }
+.c-sheet:not([open]) { transform: translateY(100%); }
+@starting-style { .c-sheet[open] { transform: translateY(100%); } }
+.c-sheet::backdrop { background: color-mix(in srgb, var(--murekkep) 55%, transparent); opacity: 1; transition: opacity 0.42s, overlay 0.42s allow-discrete, display 0.42s allow-discrete; }
+.c-sheet:not([open])::backdrop { opacity: 0; }
+@starting-style { .c-sheet[open]::backdrop { opacity: 0; } }
+.c-sheet-ust { position: sticky; top: 0; z-index: 1; height: 22px; margin-bottom: -22px; display: grid; place-items: center; touch-action: none; cursor: grab; }
+.c-sheet-tutamac { width: 40px; height: 5px; border-radius: 3px; background: var(--krem); box-shadow: 0 0 0 1px color-mix(in srgb, var(--murekkep) 25%, transparent); }
+.c-sheet img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.c-sheet img[hidden] { display: none; }
+.c-sheet-kapat { position: absolute; z-index: 2; top: 0.75rem; right: 0.75rem; width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--krem); color: var(--murekkep); display: grid; place-items: center; box-shadow: 0 2px 8px color-mix(in srgb, var(--murekkep) 25%, transparent); }
+.c-sheet-govde { padding: 1.6rem 1.1rem 0; }
+.c-sheet img:not([hidden]) + .c-sheet-govde { padding-top: 1rem; }
+.c-sheet h2 { margin: 0 3.2rem 0.5rem 0; font: 800 1.6rem/1.15 "Bricolage Grotesque", var(--govde); color: var(--yaprak); text-wrap: balance; }
+.c-sheet-fiyat { display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; }
+.c-sheet-fiyat strong { font: 800 1.5rem/1 "Bricolage Grotesque", var(--govde); font-variant-numeric: tabular-nums; }
+.c-sheet-fiyat s, .c-sheet-fiyat span { color: var(--soluk); font-size: 0.9375rem; }
+.c-sheet-aciklama { margin: 0.9rem 0 0; line-height: 1.5; }
+.c-sheet ul { margin: 0.9rem 0 0; padding: 0.8rem 0 0 1.1rem; border-top: 2px solid var(--cizgi); color: var(--soluk); font-size: 0.9375rem; line-height: 1.5; }
+.c-sheet li + li { margin-top: 0.3rem; }
+@media (prefers-reduced-motion: reduce) { .c-sheet, .c-sheet::backdrop { transition: none; } }
 .demo-serit { margin: 0; padding: 0.4rem 1rem; background: var(--murekkep); color: var(--krem); font: 600 0.8125rem/1.4 var(--govde); text-align: center; }
