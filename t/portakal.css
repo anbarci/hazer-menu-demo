@@ -141,7 +141,7 @@ button:not(:disabled):active, .c-sekme a:active, .c-ayak a:active { filter: brig
 .c-fotolu { grid-template-columns: 72px minmax(0, 1fr) auto; }
 .c-fotolu > :not(.c-foto):not(.c-etiket) { grid-column: 2; }
 .c-fotolu .c-etiket { grid-column: 3; }
-.c-foto { grid-row: 1 / span 4; width: 72px; height: 72px; padding: 0; border: 0; border-radius: 6px; overflow: hidden; background: var(--cizgi); cursor: zoom-in; }
+.c-foto { grid-row: 1 / span 4; width: 72px; height: 72px; padding: 0; border: 0; border-radius: 6px; overflow: hidden; background: var(--cizgi); }
 .c-foto img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .c-sonuc-saat { font: 600 0.875rem var(--govde); color: var(--soluk); font-variant-numeric: tabular-nums; }
 .c-sonuc-saat:empty, .c-sonuc-kod:empty, .c-sonuc-odul:empty { display: none; }
@@ -151,16 +151,14 @@ button:not(:disabled):active, .c-sekme a:active, .c-ayak a:active { filter: brig
 .c-bildirim-izin[hidden] { display: none; }
 .c-bildirim-izin input { width: 22px; height: 22px; margin: 0; flex-shrink: 0; accent-color: var(--yaprak); }
 .c-urun { cursor: pointer; }
-.c-sheet { position: fixed; inset: auto 0 0 0; width: 100%; max-width: 32rem; max-height: 90dvh; margin: 0 auto; padding: 0 0 calc(env(safe-area-inset-bottom, 0px) + 1.2rem); border: 0; border-radius: 20px 20px 0 0; background: var(--krem); color: var(--murekkep); overflow-y: auto; overscroll-behavior: contain; transform: translateY(0); transition: transform 0.42s cubic-bezier(0.32, 0.72, 0, 1), overlay 0.42s allow-discrete, display 0.42s allow-discrete; }
-.c-sheet:not([open]) { transform: translateY(100%); }
-@starting-style { .c-sheet[open] { transform: translateY(100%); } }
-.c-sheet::backdrop { background: color-mix(in srgb, var(--murekkep) 55%, transparent); opacity: 1; transition: opacity 0.42s, overlay 0.42s allow-discrete, display 0.42s allow-discrete; }
-.c-sheet:not([open])::backdrop { opacity: 0; }
-@starting-style { .c-sheet[open]::backdrop { opacity: 0; } }
+.c-sheet { position: fixed; inset: auto 0 0 0; width: 100%; max-width: 32rem; max-height: 90dvh; margin: 0 auto; padding: 0 0 calc(env(safe-area-inset-bottom, 0px) + 1.2rem); border: 0; border-radius: 20px 20px 0 0; background: var(--krem); color: var(--murekkep); overflow-y: auto; overscroll-behavior: contain; transform: translateY(100%); transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1); }
+.c-sheet.acik { transform: translateY(0); }
+.c-sheet::backdrop { background: color-mix(in srgb, var(--murekkep) 55%, transparent); opacity: 0; transition: opacity 0.45s ease; }
+.c-sheet.acik::backdrop { opacity: 1; }
+.c-sheet img { display: block; max-width: 100%; max-height: 60dvh; width: auto; height: auto; margin: 0 auto; }
+.c-sheet img[hidden] { display: none; }
 .c-sheet-ust { position: sticky; top: 0; z-index: 1; height: 22px; margin-bottom: -22px; display: grid; place-items: center; touch-action: none; cursor: grab; }
 .c-sheet-tutamac { width: 40px; height: 5px; border-radius: 3px; background: var(--krem); box-shadow: 0 0 0 1px color-mix(in srgb, var(--murekkep) 25%, transparent); }
-.c-sheet img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
-.c-sheet img[hidden] { display: none; }
 .c-sheet-kapat { position: absolute; z-index: 2; top: 0.75rem; right: 0.75rem; width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--krem); color: var(--murekkep); display: grid; place-items: center; box-shadow: 0 2px 8px color-mix(in srgb, var(--murekkep) 25%, transparent); }
 .c-sheet-govde { padding: 1.6rem 1.1rem 0; }
 .c-sheet img:not([hidden]) + .c-sheet-govde { padding-top: 1rem; }

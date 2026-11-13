@@ -52,32 +52,41 @@
     araG.addEventListener('keydown', function (e) { if (e.key === 'Escape') araD.click(); });
   }
 
-  // ürün penceresi: ürüne dokununca alttan açılır; fotoğraf, fiyat, açıklama ve alerjen bilgisi; geri tuşu, aşağı kaydırma ya da dışına dokunma kapatır
+  // ürün penceresi: ürüne dokununca alttan kayarak açılır; çarpı, geri tuşu, dışına dokunma ya da tutamaçtan aşağı sürükleme kayarak kapatır
   var sheet = $('.c-sheet');
   if (sheet && sheet.showModal) {
-    var sImg = $('img', sheet), sGovde = $('.c-sheet-govde', sheet);
+    var sImg = $('img', sheet), sAc = $('.c-sheet-aciklama', sheet), kapanis = 0;
     var sheetAc = function (u) {
       var foto = $('.c-foto img', u), alj = $('.c-alj', u);
-      sImg.hidden = !foto; if (foto) { sImg.src = foto.src; }
+      sImg.hidden = !foto; if (foto) sImg.src = foto.src;
       $('h2', sheet).textContent = $('b', u).textContent;
       $('.c-sheet-fiyat', sheet).innerHTML = $('.c-etiket', u).innerHTML;
-      var ac = alj ? alj.dataset.aciklama : ''; $('.c-sheet-aciklama', sheet).textContent = ac; $('.c-sheet-aciklama', sheet).hidden = !ac;
-      var ul = $('ul', sheet); ul.replaceChildren.apply(ul, (alj ? JSON.parse(alj.dataset.ayrinti) : [$('.c-danis', u) ? $('.c-danis', u).textContent : '']).filter(Boolean).map(function (m) { var li = document.createElement('li'); li.textContent = m; return li; }));
-      sheet.scrollTop = 0; sheet.style.transform = '';
+      sAc.textContent = alj.dataset.aciklama; sAc.hidden = !alj.dataset.aciklama;
+      var ul = $('ul', sheet); ul.replaceChildren.apply(ul, JSON.parse(alj.dataset.ayrinti).map(function (m) { var li = document.createElement('li'); li.textContent = m; return li; }));
+      clearTimeout(kapanis); sheet.style.transform = ''; sheet.scrollTop = 0;
       toastGizle(); sheet.showModal(); history.pushState({ sheet: 1 }, '');
+      void sheet.offsetHeight; sheet.classList.add('acik'); // kapalı konum önce çizilsin ki kayma görünsün
+    };
+    var kapat = function () {
+      if (!sheet.open || !sheet.classList.contains('acik')) return;
+      sheet.classList.remove('acik'); sheet.style.transform = '';
+      kapanis = setTimeout(function () { sheet.close(); }, azHareket ? 0 : 450);
     };
     document.addEventListener('click', function (e) {
       var u = e.target.closest('.c-urun');
       if (u && !e.target.closest('a')) sheetAc(u);
     });
-    sheet.addEventListener('click', function (e) { if (e.target === sheet) sheet.close(); });
-    sheet.addEventListener('close', function () { if (history.state && history.state.sheet) history.back(); });
-    addEventListener('popstate', function () { if (sheet.open) sheet.close(); });
-    // tutamaçtan aşağı sürükleyince kapanır
+    sheet.addEventListener('click', function (e) { if (e.target === sheet) kapat(); });
+    $('.c-sheet-kapat', sheet).addEventListener('click', kapat);
+    sheet.addEventListener('cancel', function (e) { e.preventDefault(); kapat(); });
+    sheet.addEventListener('close', function () { sheet.classList.remove('acik'); if (history.state && history.state.sheet) history.back(); });
+    addEventListener('popstate', kapat);
     var ust = $('.c-sheet-ust', sheet), y0 = null;
+    var birak = function (d) { y0 = null; sheet.style.transition = ''; if (d > 90) kapat(); else sheet.style.transform = ''; };
     ust.addEventListener('pointerdown', function (e) { y0 = e.clientY; sheet.style.transition = 'none'; ust.setPointerCapture(e.pointerId); });
     ust.addEventListener('pointermove', function (e) { if (y0 != null) sheet.style.transform = 'translateY(' + Math.max(0, e.clientY - y0) + 'px)'; });
-    ust.addEventListener('pointerup', function (e) { var d = e.clientY - y0; y0 = null; sheet.style.transition = ''; sheet.style.transform = ''; if (d > 90) sheet.close(); });
+    ust.addEventListener('pointerup', function (e) { if (y0 != null) birak(e.clientY - y0); });
+    ust.addEventListener('pointercancel', function () { birak(0); });
   }
 
   // duyuru zili
