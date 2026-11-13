@@ -155,7 +155,7 @@ button:not(:disabled):active, .c-sekme a:active, .c-ayak a:active { filter: brig
 .c-sheet.acik { transform: translateY(0); }
 .c-sheet::backdrop { background: color-mix(in srgb, var(--murekkep) 55%, transparent); opacity: 0; transition: opacity 0.45s ease; }
 .c-sheet.acik::backdrop { opacity: 1; }
-.c-sheet img { display: block; max-width: 100%; max-height: 60dvh; width: auto; height: auto; margin: 0 auto; }
+.c-sheet img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: contain; background: color-mix(in srgb, var(--murekkep) 6%, var(--krem)); }
 .c-sheet img[hidden] { display: none; }
 .c-sheet-ust { position: sticky; top: 0; z-index: 1; height: 22px; margin-bottom: -22px; display: grid; place-items: center; touch-action: none; cursor: grab; }
 .c-sheet-tutamac { width: 40px; height: 5px; border-radius: 3px; background: var(--krem); box-shadow: 0 0 0 1px color-mix(in srgb, var(--murekkep) 25%, transparent); }
