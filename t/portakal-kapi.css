@@ -1,0 +1,26 @@
+:root { --yaprak: #1E4A2C; --yaprak-koyu: #163822; --portakal: #F28B30; --krem: #FFF8EE; --murekkep: #1A1A14; --soluk: #5B5446; --cizgi: #EADFCB; --dilim: #F7A04B; --dilim-acik: #FFF3DE; }
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { margin: 0; background: #E9E4DA; }
+body { color: var(--murekkep); font: 400 10.5pt/1.35 "Instrument Sans", system-ui, sans-serif; }
+.k-sayfa { width: 210mm; min-height: 297mm; margin: 0 auto; background: var(--krem); display: flex; flex-direction: column; }
+.k-bas { position: relative; overflow: hidden; padding: 10mm 14mm 7mm; background: linear-gradient(180deg, var(--yaprak), var(--yaprak-koyu)); color: var(--krem); }
+.k-bas h1 { margin: 0; font: 800 40pt/0.9 "Bricolage Grotesque", sans-serif; letter-spacing: -0.04em; color: var(--portakal); }
+.k-bas h1 small { display: block; margin-top: 2mm; font-size: 18pt; letter-spacing: -0.02em; color: var(--krem); }
+.k-bas p { margin: 3mm 0 0; font-size: 11pt; opacity: 0.9; }
+.k-dilim { position: absolute; right: -16mm; top: -18mm; width: 66mm; height: 66mm; border-radius: 50%; background: radial-gradient(circle, var(--dilim-acik) 0 7%, transparent 7.5%), repeating-conic-gradient(from 7deg, var(--dilim) 0 34deg, var(--dilim-acik) 34deg 36deg), var(--dilim-acik); box-shadow: 0 0 0 2.6mm var(--dilim-acik), 0 0 0 4.6mm var(--portakal); }
+.k-liste { flex: 1; padding: 7mm 14mm 2mm; column-count: 2; column-gap: 10mm; }
+.k-kat { break-inside: avoid; margin-bottom: 5mm; }
+.k-kat h2 { margin: 0 0 2mm; padding-bottom: 1.2mm; border-bottom: 1.2mm solid var(--portakal); font: 800 15pt/1.1 "Bricolage Grotesque", sans-serif; letter-spacing: -0.02em; color: var(--yaprak); }
+.k-kat ul { list-style: none; margin: 0; padding: 0; }
+.k-kat li { display: flex; align-items: baseline; gap: 1.6mm; padding: 0.85mm 0; }
+.k-ad { font-weight: 600; }
+.k-cizgi { flex: 1; border-bottom: 0.3mm dotted color-mix(in srgb, var(--murekkep) 40%, transparent); transform: translateY(-1mm); }
+.k-miktar { font-size: 8.5pt; color: var(--soluk); white-space: nowrap; }
+.k-kat b { min-width: 15mm; text-align: right; font: 800 11.5pt/1 "Bricolage Grotesque", sans-serif; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.k-ayak { break-inside: avoid; padding: 4mm 14mm 5mm; background: var(--yaprak); color: var(--krem); font-size: 9pt; }
+.k-ayak p { margin: 0.8mm 0; }
+.k-ayak b { color: var(--portakal); font-size: 10pt; }
+.k-adres { opacity: 0.8; }
+@media screen { body { padding: 8mm 0; } .k-sayfa { box-shadow: 0 6px 30px color-mix(in srgb, var(--murekkep) 25%, transparent); } }
+@media print { html, body { background: none; } }
