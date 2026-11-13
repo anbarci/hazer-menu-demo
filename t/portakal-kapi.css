@@ -1,5 +1,6 @@
 :root { --yaprak: #1E4A2C; --yaprak-koyu: #163822; --portakal: #F28B30; --krem: #FFF8EE; --murekkep: #1A1A14; --soluk: #5B5446; --cizgi: #EADFCB; --dilim: #F7A04B; --dilim-acik: #FFF3DE; }
-@page { size: A4; margin: 0; }
+@page { size: A4; margin: 12mm 0 10mm; background: #FFF8EE; }
+@page :first { margin: 0; }
 * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 html, body { margin: 0; background: #E9E4DA; }
 body { color: var(--murekkep); font: 400 10.5pt/1.35 "Instrument Sans", system-ui, sans-serif; }
@@ -23,4 +24,4 @@ body { color: var(--murekkep); font: 400 10.5pt/1.35 "Instrument Sans", system-u
 .k-ayak b { color: var(--portakal); font-size: 10pt; }
 .k-adres { opacity: 0.8; }
 @media screen { body { padding: 8mm 0; } .k-sayfa { box-shadow: 0 6px 30px color-mix(in srgb, var(--murekkep) 25%, transparent); } }
-@media print { html, body { background: none; } }
+@media print { html, body { background: var(--krem); } }
