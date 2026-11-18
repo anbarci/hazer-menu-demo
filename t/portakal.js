@@ -68,7 +68,7 @@
     var sImg = $('img', sheet), sAc = $('.c-sheet-aciklama', sheet), kapanis = 0;
     var sheetAc = function (u) {
       var foto = $('.c-foto img', u), alj = $('.c-alj', u);
-      sImg.hidden = !foto; if (foto) sImg.src = foto.src;
+      sImg.hidden = !foto; if (foto) sImg.src = foto.dataset.buyuk || foto.src;
       $('h2', sheet).textContent = $('b', u).textContent;
       $('.c-sheet-fiyat', sheet).innerHTML = $('.c-etiket', u).innerHTML;
       sAc.textContent = alj.dataset.aciklama; sAc.hidden = !alj.dataset.aciklama;
