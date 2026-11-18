@@ -25,3 +25,6 @@ body { color: var(--murekkep); font: 400 10.5pt/1.35 "Instrument Sans", system-u
 .k-adres { opacity: 0.8; }
 @media screen { body { padding: 8mm 0; } .k-sayfa { box-shadow: 0 6px 30px color-mix(in srgb, var(--murekkep) 25%, transparent); } }
 @media print { html, body { background: var(--krem); } }
+/* telefonda A4 genişliği sığmaz: ekranda sayfa ekrana uyar, tek sütun olur; baskı değişmez */
+@media screen and (max-width: 216mm) { body { padding: 0; } .k-sayfa { width: 100%; min-height: 0; box-shadow: none; } .k-bas, .k-liste, .k-ayak { padding-left: 5mm; padding-right: 5mm; } }
+@media screen and (max-width: 150mm) { .k-liste { column-count: 1; } .k-bas h1 { font-size: 30pt; } .k-dilim { width: 30mm; height: 30mm; right: -9mm; top: -9mm; } .k-bas p { padding-right: 18mm; } }
