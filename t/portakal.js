@@ -26,8 +26,18 @@
   }
 
   // kategori çubuğunda bulunulan bölüm
-  var sekme = $$('.c-sekme a'), cizim = 0;
-  function bulun() { cizim = 0; var s = sekme[0]; sekme.forEach(function (a) { var b = document.getElementById(a.hash.slice(1)); if (b && b.getBoundingClientRect().top <= 80) s = a; }); sekme.forEach(function (a) { if (a === s) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current'); }); }
+  // başlığı çubuğun altındaki alanın üst üçte birine gelen bölüm seçili sayılır; seçili düğme çubukta ortaya kaydırılır
+  var sekme = $$('.c-sekme a'), cubuk = $('.c-sekme'), cizim = 0, onceki = null;
+  function bulun() {
+    cizim = 0;
+    var alt = cubuk ? cubuk.getBoundingClientRect().bottom : 56, esik = alt + (innerHeight - alt) / 3, s = sekme[0];
+    sekme.forEach(function (a) { var b = document.getElementById(a.hash.slice(1)); if (b && b.getBoundingClientRect().top <= esik) s = a; });
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) s = sekme[sekme.length - 1]; // sayfa sonunda son bölüm eşiğe çıkamaz
+    if (s === onceki) return;
+    onceki = s;
+    sekme.forEach(function (a) { if (a === s) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current'); });
+    if (s && cubuk) cubuk.scrollTo({ left: s.offsetLeft - cubuk.offsetLeft - (cubuk.clientWidth - s.offsetWidth) / 2, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
   addEventListener('scroll', function () { if (!cizim) cizim = requestAnimationFrame(bulun); }, { passive: true });
 
   // arama
