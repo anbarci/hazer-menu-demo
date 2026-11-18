@@ -36,7 +36,7 @@
     if (s === onceki) return;
     onceki = s;
     sekme.forEach(function (a) { if (a === s) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current'); });
-    if (s && cubuk) cubuk.scrollTo({ left: s.offsetLeft - cubuk.offsetLeft - (cubuk.clientWidth - s.offsetWidth) / 2, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    if (s && cubuk) cubuk.scrollTo({ left: cubuk.scrollLeft + s.getBoundingClientRect().left - cubuk.getBoundingClientRect().left - (cubuk.clientWidth - s.offsetWidth) / 2, behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }
   addEventListener('scroll', function () { if (!cizim) cizim = requestAnimationFrame(bulun); }, { passive: true });
 
